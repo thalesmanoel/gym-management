@@ -1,10 +1,7 @@
 import { Router } from "express";
-import SigninController from "../controllers/unauth/SigninController";
-
+import UserRoutes from "./UserRoutes";
 const router = Router();
-const signinController = new SigninController();
 
-router.post("/login", signinController.login);
-router.post("/register", signinController.register);
+router.use("/users", UserRoutes);
 
 export default router;

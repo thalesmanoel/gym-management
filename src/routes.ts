@@ -1,13 +1,12 @@
 import { Router } from "express";
 import { authMiddleware } from "./middlewares/AuthMiddleware";
 
-import userRoutes from "./routes/UserRoutes";
+import unauthRoutes from "./routes/UnauthRoutes";
 import authRoutes from "./routes/AuthRoutes";
 
 const router = Router();
 
-router.use("/unauth", authRoutes);
-
-router.use("/auth", authMiddleware, Router().use("/users", userRoutes));
+router.use("/unauth", unauthRoutes);
+router.use("/auth", authMiddleware, authRoutes);
 
 export default router;
