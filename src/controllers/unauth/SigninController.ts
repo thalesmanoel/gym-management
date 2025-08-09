@@ -2,14 +2,14 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User, { IUser } from "../../models/User";
-import Level from "../../enums/Level";
+import Role from "../../enums/Role";
 
 const SECRET = process.env.JWT_SECRET || "minha_chave_secreta";
 
 export default class SigninController {
   register = async (req: Request, res: Response) => {
     try {
-      const { name, email, password, level } = req.body;
+      const { name, email, password, role } = req.body;
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -17,7 +17,7 @@ export default class SigninController {
         name,
         email,
         password: hashedPassword,
-        level: level || Level.STUDENT,
+        role: role || Role.STUDENT,
       });
 
       res.status(201).json({ message: "User created", user });
@@ -39,7 +39,7 @@ export default class SigninController {
       if (!match) return res.status(401).json({ message: "Invalid password" });
 
       const token = jwt.sign(
-        { id: user._id, email: user.email, level: user.level },
+        { id: user._id, email: user.email, role: user.role },
         SECRET,
         { expiresIn: "1d" }
       );

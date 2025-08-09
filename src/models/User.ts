@@ -1,11 +1,11 @@
 import mongoose, { Schema, Document } from "mongoose";
-import Level from "../enums/Level";
+import Role from "../enums/Role";
 
 export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  level: Level;
+  role: Role;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -13,11 +13,11 @@ const UserSchema = new Schema<IUser>(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    level: {
+    role: {
       type: String,
-      enum: Object.values(Level),
-      required: true
-    }
+      enum: Object.values(Role),
+      required: true,
+    },
   },
   { timestamps: true }
 );

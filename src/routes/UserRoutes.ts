@@ -1,5 +1,7 @@
 import { Router } from "express";
 import UserController from "../controllers/auth/UserController";
+import AllowedRoles from "../middlewares/AllowedLevelMiddleware";
+import Role from "../enums/Role";
 
 const router = Router();
 const userController = new UserController();
