@@ -1,19 +1,21 @@
 import "dotenv/config";
 import express from "express";
-import mongoose from "mongoose";
+import Database from "./config/Database";
+import routes from "./routes"; // importa o centralizador
 
 const app = express();
 app.use(express.json());
 
-mongoose
-  .connect(process.env.MONGO_URI || "mongodb://localhost:27017/gym-management")
-  .then(() => console.log("📦 Conectado ao MongoDB"))
-  .catch(err => console.error("Erro ao conectar no MongoDB:", err));
+Database.connect();
+
+const PORT = process.env.PORT || 3000;
+
+app.use("/", routes); 
 
 app.get("/", (_req, res) => {
   res.send("API rodando 🚀");
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`Servidor rodando na porta ${process.env.PORT}`);
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
