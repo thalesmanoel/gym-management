@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import Database from "./config/Database";
-import routes from "./routes"; // importa o centralizador
+import routes from "./routes";
 
 const app = express();
 app.use(express.json());

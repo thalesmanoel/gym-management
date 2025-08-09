@@ -1,14 +1,39 @@
 import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
 
-export function authMiddleware(req: Request, res: Response, next: NextFunction) {
-  const token = req.headers.authorization;
+interface IJwtPayload {
+  id: string;
+  email: string;
+  level: string;
+}
 
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
+declare global {
+  namespace Express {
+    interface Request {
+      user?: IJwtPayload;
+    }
+  }
+}
+
+const SECRET = process.env.JWT_SECRET || "minha_chave_secreta";
+
+export function authMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ message: "Token not provided" });
   }
 
-  // Aqui você validaria o token de verdade
-  // Ex.: jwt.verify(token, process.env.JWT_SECRET)
+  const [, token] = authHeader.split(" ");
 
-  next();
+  try {
+    const decoded = jwt.verify(token, SECRET);
+    req.user = decoded as IJwtPayload;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
 }
